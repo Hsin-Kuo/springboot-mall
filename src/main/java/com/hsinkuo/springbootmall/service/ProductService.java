@@ -10,4 +10,6 @@ public interface ProductService {
     List<Product> getProducts();
 
     Integer createProduct(ProductRequest productRequest);
+
+    void updateProduct(Integer productId, ProductRequest productRequest);
 }
