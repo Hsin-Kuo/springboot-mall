@@ -5,6 +5,7 @@ import com.hsinkuo.springbootmall.dto.ProductQueryParams;
 import com.hsinkuo.springbootmall.dto.ProductRequest;
 import com.hsinkuo.springbootmall.model.Product;
 import com.hsinkuo.springbootmall.service.ProductService;
+import com.hsinkuo.springbootmall.util.Page;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -34,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             //查詢條件 Filtering
             @RequestParam(required = false)ProductCategory category,
             @RequestParam(required = false)String search,
@@ -53,9 +54,19 @@ public class ProductController {
         productQueryParams.setLimit(limit);
         productQueryParams.setOffset(offset);
 
+        //取得product list
         List<Product> products = productService.getProducts(productQueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(products);
+        //取得 product 總數
+        Integer total = productService.countProduct(productQueryParams);
+
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(products);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
 
     }
 
