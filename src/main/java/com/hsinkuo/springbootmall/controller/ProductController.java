@@ -31,11 +31,8 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProducts(){
         List<Product> products = productService.getProducts();
 
-        if(products != null){
-            return ResponseEntity.status(HttpStatus.OK).body(products);
-        }else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(products);
+
     }
 
     @PostMapping("/products")
