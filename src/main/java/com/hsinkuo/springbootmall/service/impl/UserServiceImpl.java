@@ -1,6 +1,7 @@
 package com.hsinkuo.springbootmall.service.impl;
 
 import com.hsinkuo.springbootmall.dao.UserDao;
+import com.hsinkuo.springbootmall.dto.UserLoginRequest;
 import com.hsinkuo.springbootmall.dto.UserRegisterRequest;
 import com.hsinkuo.springbootmall.model.User;
 import com.hsinkuo.springbootmall.service.UserService;
@@ -37,5 +38,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer userId) {
         return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user =  userDao.getUserByEmail(userLoginRequest.getEmail());
+
+        if(user == null){
+            log.warn("該Email {} 尚未註冊", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        if(user.getPassword().equals(userLoginRequest.getPassword())){
+            return user;
+        }else {
+            log.warn("email {} 的密碼不正確", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }
