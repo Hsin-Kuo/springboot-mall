@@ -1,6 +1,7 @@
 package com.hsinkuo.springbootmall.controller;
 
 import com.hsinkuo.springbootmall.dto.CreateOrderRequest;
+import com.hsinkuo.springbootmall.model.Order;
 import com.hsinkuo.springbootmall.model.User;
 import com.hsinkuo.springbootmall.service.OrderService;
 import jakarta.validation.Valid;
@@ -24,7 +25,9 @@ public class OrderController {
 
         Integer orderId = orderService.createOrder(userId, createOrderRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderId);
+        Order order = orderService.getOrderById(orderId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
 
     }
 }
