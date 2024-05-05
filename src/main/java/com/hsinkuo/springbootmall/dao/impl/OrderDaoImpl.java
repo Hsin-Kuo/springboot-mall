@@ -1,6 +1,7 @@
 package com.hsinkuo.springbootmall.dao.impl;
 
 import com.hsinkuo.springbootmall.dao.OrderDao;
+import com.hsinkuo.springbootmall.dto.OrderQueryParams;
 import com.hsinkuo.springbootmall.model.Order;
 import com.hsinkuo.springbootmall.model.OrderItem;
 import com.hsinkuo.springbootmall.rowmapper.OrderItemRowMapper;
@@ -12,10 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class OrderDaoImpl implements OrderDao {
@@ -96,5 +94,46 @@ public class OrderDaoImpl implements OrderDao {
         }
 
         namedParameterJdbcTemplate.batchUpdate(sql, parameterSources);
+    }
+
+    @Override
+    public Integer countOrder(OrderQueryParams orderQueryParams) {
+        String sql = "SELECT count(*) FROM `order` WHERE 1=1";
+
+        Map<String, Object> map = new HashMap<>();
+
+        sql = addFilteringSql(sql, map , orderQueryParams);
+
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+
+        return total;
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryParams orderQueryParams) {
+        String sql = "SELECT order_id, user_id, created_date, last_modified_date FROM `order` WHERE 1=1";
+
+        Map<String, Object> map = new HashMap<>();
+
+        sql = addFilteringSql(sql, map, orderQueryParams);
+        sql += " ORDER BY created_date DESC";
+
+        sql += " LIMIT :limit OFFSET :offset";
+        map.put("limit", orderQueryParams.getLimit());
+        map.put("offset", orderQueryParams.getOffset());
+
+        List<Order> orderList = namedParameterJdbcTemplate.query(sql, map, new OrderRowMapper());
+
+
+        return orderList;
+    }
+
+    private String addFilteringSql(String sql, Map<String, Object> map, OrderQueryParams orderQueryParams){
+        if(orderQueryParams.getUserId() != null){
+            sql += " AND user_id = userId";
+            map.put("userId", orderQueryParams.getUserId());
+        }
+
+        return sql;
     }
 }

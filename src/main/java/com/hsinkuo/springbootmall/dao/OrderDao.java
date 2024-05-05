@@ -1,5 +1,6 @@
 package com.hsinkuo.springbootmall.dao;
 
+import com.hsinkuo.springbootmall.dto.OrderQueryParams;
 import com.hsinkuo.springbootmall.model.Order;
 import com.hsinkuo.springbootmall.model.OrderItem;
 
@@ -15,5 +16,7 @@ public interface OrderDao {
 
     void createOrderItems(Integer orderId, List<OrderItem> orderItemList);
 
+    Integer countOrder(OrderQueryParams orderQueryParams);
 
+    List<Order> getOrders(OrderQueryParams orderQueryParams);
 };
