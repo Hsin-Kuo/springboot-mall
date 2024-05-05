@@ -23,7 +23,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public Order getOrderById(Integer orderId) {
-        String sql = "SELECT order_id, user_id, total_amount, created_date, last_modified_date) " +
+        String sql = "SELECT order_id, user_id, total_amount, created_date, last_modified_date " +
                 "FROM `order` WHERE order_id = :orderId";
 
         Map<String, Object> map = new HashMap<>();
@@ -111,7 +111,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public List<Order> getOrders(OrderQueryParams orderQueryParams) {
-        String sql = "SELECT order_id, user_id, created_date, last_modified_date FROM `order` WHERE 1=1";
+        String sql = "SELECT order_id, user_id,total_amount, created_date, last_modified_date FROM `order` WHERE 1=1";
 
         Map<String, Object> map = new HashMap<>();
 
@@ -130,7 +130,7 @@ public class OrderDaoImpl implements OrderDao {
 
     private String addFilteringSql(String sql, Map<String, Object> map, OrderQueryParams orderQueryParams){
         if(orderQueryParams.getUserId() != null){
-            sql += " AND user_id = userId";
+            sql += " AND user_id = :userId";
             map.put("userId", orderQueryParams.getUserId());
         }
 

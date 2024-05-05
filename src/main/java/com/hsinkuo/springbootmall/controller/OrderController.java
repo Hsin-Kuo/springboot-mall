@@ -44,13 +44,13 @@ public class OrderController {
         List<Order> orderList = orderService.getOrders(orderQueryParams);
 
         //取得 order 總數
-        Integer total = productService.countProduct(productQueryParams);
+        Integer total = orderService.countOrder(orderQueryParams);
 
-        Page<Product> page = new Page<>();
+        Page<Order> page = new Page<>();
         page.setLimit(limit);
         page.setOffset(offset);
         page.setTotal(total);
-        page.setResults(products);
+        page.setResults(orderList);
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
 
